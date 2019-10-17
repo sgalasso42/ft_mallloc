@@ -1,0 +1,5 @@
+
+- checker les globales
+- Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free
+- check fonctions interdites
+- check libft (qui est toujours un peu crade)

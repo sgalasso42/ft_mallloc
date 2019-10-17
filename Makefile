@@ -13,6 +13,8 @@ CYAN        = "\\033[36m"
 GREEN       = "\\033[32m"
 
 SRC_NAME 	= main.c \
+			ft_malloc.c \
+			ft_free.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 
