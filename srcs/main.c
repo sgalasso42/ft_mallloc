@@ -12,9 +12,6 @@ int		main(void)
 	}
 	str = strcpy(str, "12345");
 
-	
-	printf("ptr : %p\ncontent : %s\n", str, str);
-
 	if (!(str1 = ft_malloc(sizeof(char) * 5)))
 	{
 		printf("Malloc returned null 1");
@@ -22,15 +19,15 @@ int		main(void)
 	}
 	str1 = strcpy(str1, "abcde");
 
-	printf("ptr : %p\ncontent : %s\n", str1, str1);
+	show_pages_content();
 
 	ft_free(str);
 
-	//printf("ptr : %p\ncontent : %s\n", str, str);
+	show_pages_content();
 
 	ft_free(str1);
 
-	//printf("ptr : %p\ncontent : %s\n", str1, str1);
+	show_pages_content();
 
 	return (0);
 }

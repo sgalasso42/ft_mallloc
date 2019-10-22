@@ -1,4 +1,8 @@
 
+- initialiser g_pagelist a 0
+
+- refactor large_check() : y'a des trucs useless dedans
+
 - checker les globales
 - Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free
 - check fonctions interdites

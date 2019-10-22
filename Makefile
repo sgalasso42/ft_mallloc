@@ -1,6 +1,6 @@
 NAME 		= a.out
 CC 			= gcc
-CFLAGS 		= -Wall -Wextra -Werror -g -O3 #-fsanitize=address
+CFLAGS 		= -Wall -Wextra -Werror -g -fsanitize=address
 
 SRC_PATH 	= srcs/
 OBJ_PATH 	= objs/
@@ -15,6 +15,8 @@ GREEN       = "\\033[32m"
 SRC_NAME 	= main.c \
 			ft_malloc.c \
 			ft_free.c \
+			show_alloc_mem.c \
+			show_pages_content.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 

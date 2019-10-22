@@ -1,33 +1,80 @@
 #include "ft_malloc.h"
 
-t_page		*get_first_page(void)
+t_block		*add_block(t_page *page, void *addr, size_t size)
 {
-	static t_page	*first_page = 0;
+	t_block		*curr_block; // current block
+	t_block		*new_block;
 
-	return (first_page);
-}
+	new_block = addr;
+	new_block->size = size;
+	new_block->fsize = size + sizeof(t_block);
 
-t_page		*space_available(size_t size)
-{
-	t_page	*page = 0;
-
-	(void)size;
-
-	page = get_first_page();
-	if (0/*TINY*/)
+	if ((curr_block = page->blocklist))
 	{
-	}
-	else if (0/*SMALL*/)
-	{
+		while (curr_block->next)
+		{
+			if (curr_block < new_block)
+			{
+				if ((curr_block->next && (void *)new_block < (void *)curr_block->next)
+				|| (!curr_block->next && (void *)new_block < (void *)page->next))
+					break ;
+			}
+			curr_block = curr_block->next;
+		}
+		new_block->next = curr_block->next;
+		curr_block->next = new_block;
 	}
 	else
 	{
-		while (page)
+		page->blocklist = new_block;
+		new_block->next = 0;
+	}
+	return (new_block);
+}
+
+t_block		*large_check(t_page *page, size_t fsize, size_t size)
+{
+	t_block		*block = 0;
+
+	if (!page->blocklist && fsize <= page->size)
+	{
+		block = add_block(page, page + sizeof(t_page), size);
+		return (block);
+	}
+	while (block)
+	{
+		if ((!block->next && (size_t)(page + page->fsize) - (size_t)block >= fsize)
+		|| (block->next && (size_t)block->next - (size_t)(block + block->fsize) >= fsize))
 		{
-			if (page->available)
-				return (page);
-			page = page->next;
+			block = add_block(page, block + block->fsize, size);
+			return (block);
 		}
+		block = block->next;
+	}
+	return (block);
+}
+
+t_block		*space_available(size_t size)
+{
+	t_page		*page;
+	t_block		*block;
+	size_t		fsize;
+
+	fsize = size + sizeof(t_block);
+	page = g_pagelist;
+	while (page)
+	{
+		if (0/*TINY*/)
+		{
+		}
+		else if (0/*SMALL*/)
+		{
+		}
+		else
+		{
+			block = large_check(page, fsize, size);
+		}
+		page = page->next;
 	}
 	return (0);
 }
@@ -36,15 +83,8 @@ t_page		*new_page(size_t size)
 {
 	t_page	*last_page;
 	t_page	*new_page;
-	size_t	length;
 
-	length = size + sizeof(t_page);
-
-	last_page = get_first_page();
-	while (last_page)
-		last_page = last_page->next;
-
-	if ((new_page = mmap(0, length, PROT_READ | PROT_WRITE,
+	if ((new_page = mmap(0, size + sizeof(t_page), PROT_READ | PROT_WRITE,
 		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
 	{
 		printf("mmap error\n");
@@ -52,27 +92,42 @@ t_page		*new_page(size_t size)
 	}
 
 	new_page->size = size;
-	new_page->available = 0;
+	new_page->fsize = size + sizeof(t_page);
+	new_page->blocklist = 0;
 	new_page->next = 0;
-	if (last_page)
+
+	if (!g_pagelist)
 	{
-		last_page->next = new_page;
+		g_pagelist = new_page;;
 	}
 	else
 	{
-		last_page = new_page;
+		last_page = g_pagelist;
+		while (last_page->next)
+			last_page = last_page->next;
+		last_page->next = new_page;
 	}
-
 	return (new_page);
+}
+
+t_block		*space_allocation(size_t size)
+{
+	t_page		*page;
+	t_block		*block;
+
+	page = new_page(size); // todo : LARGE / SMALL / TINY system
+	block = add_block(page, page + sizeof(page), size);
+
+	return (block);
 }
 
 void		*ft_malloc(size_t size)
 {
-	t_page	*page;
+	t_block		*block;
 
-	if (!(page = space_available(size)))
+	if (!(block = space_available(size)))
 	{
-		page = new_page(size);
+		block = space_allocation(size);
 	}
-	return (page);
+	return ((void *)block);
 }
