@@ -35,13 +35,13 @@ int		main(void)
 		return (0);
 	}
 
-	/*if (!(str1 = ft_malloc(sizeof(char) * 25)))
+	if (!(str1 = ft_malloc(sizeof(char) * 25)))
 	{
 		printf("Malloc returned null 1");
 		return (0);
 	}
 
-	if (!(str2 = ft_malloc(sizeof(char) * 160)))
+	/*if (!(str2 = ft_malloc(sizeof(char) * 160)))
 	{
 		printf("Malloc returned null 2");
 		return (0);

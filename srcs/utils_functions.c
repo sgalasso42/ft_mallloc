@@ -14,9 +14,9 @@
 
 int		get_typesize(size_t size)
 {
-	if (size <= TINY)
+	if (size <= TINYMAX)
 		return (TINY);
-	else if (size > TINY && size <= SMALL)
+	else if (size > TINYMAX && size <= SMALLMAX)
 		return (SMALL);
 	return (LARGE);
 }
