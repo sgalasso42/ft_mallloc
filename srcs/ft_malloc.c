@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_malloc.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgalasso <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/23 15:04:26 by sgalasso          #+#    #+#             */
+/*   Updated: 2019/10/23 17:44:38 by sgalasso         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_malloc.h"
 
-t_block		*add_block(t_page *page, void *addr, size_t size)
+t_block		*add_block(t_page *page, void *addr, size_t size/*, int typesize*/)
 {
 	t_block		*curr_block; // current block
 	t_block		*new_block;
@@ -32,33 +44,11 @@ t_block		*add_block(t_page *page, void *addr, size_t size)
 	return (new_block);
 }
 
-/*t_block		*small_check(t_page *page, size_t fsize, size_t size)
+t_block		*size_check(t_page *page, size_t fsize, size_t size)
 {
 	t_block		*block = 0;
 
-	if (!page->blocklist && fsize <= page->size)
-	{
-		block = add_block(page, page + sizeof(t_page), size);
-		return (block);
-	}
-	while (block)
-	{
-		if ((!block->next && (size_t)(page + page->fsize) - (size_t)block >= fsize)
-		|| (block->next && (size_t)block->next - (size_t)(block + block->fsize) >= fsize))
-		{
-			block = add_block(page, block + block->fsize, size);
-			return (block);
-		}
-		block = block->next;
-	}
-	return (block);
-}*/
-
-t_block		*large_check(t_page *page, size_t fsize, size_t size)
-{
-	t_block		*block = 0;
-
-	if (!page->blocklist && fsize <= page->size)
+	if (!page->blocklist)
 	{
 		block = add_block(page, page + sizeof(t_page), size);
 		return (block);
@@ -76,7 +66,7 @@ t_block		*large_check(t_page *page, size_t fsize, size_t size)
 	return (block);
 }
 
-t_block		*space_available(size_t size)
+t_block		*space_available(size_t size, int typesize)
 {
 	t_page		*page;
 	t_block		*block;
@@ -86,37 +76,35 @@ t_block		*space_available(size_t size)
 	page = g_pagelist;
 	while (page)
 	{
-		if (size < TINYMAX)
+		if ((typesize == TINY && page->fsize == TINY) || (typesize == SMALL && page->fsize == SMALL))
 		{	
-			//block = tiny_check(page, fsize, size);
-		}
-		else if (size < SMALLMAX)
-		{
-			//block = small_check(page, fsize, size);
-		}
-		else
-		{
-			block = large_check(page, fsize, size);
+			block = size_check(page, fsize, size);
 		}
 		page = page->next;
 	}
 	return (0);
 }
 
-t_page		*new_page(size_t size)
+t_page		*new_page(size_t size, int typesize)
 {
 	t_page	*last_page;
 	t_page	*new_page;
+	int		length;
 
-	if ((new_page = mmap(0, size + sizeof(t_page), PROT_READ | PROT_WRITE,
-		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
+	if (typesize == LARGE)
+		length = size + sizeof(t_page);
+	else
+		length = typesize;
+
+	if ((new_page = mmap(0, typesize, PROT_READ | PROT_WRITE,
+					MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
 	{
 		printf("mmap error\n");
 		exit(EXIT_FAILURE); // temporaire, trouver autre solution
 	}
 
 	new_page->size = size;
-	new_page->fsize = size + sizeof(t_page);
+	new_page->fsize = typesize;
 	new_page->blocklist = 0;
 	new_page->next = 0;
 
@@ -134,24 +122,25 @@ t_page		*new_page(size_t size)
 	return (new_page);
 }
 
-t_block		*space_allocation(size_t size)
+t_block		*space_allocation(size_t size, int typesize)
 {
 	t_page		*page;
 	t_block		*block;
 
-	page = new_page(size); // todo : LARGE / SMALL / TINY system
-	block = add_block(page, page + sizeof(page), size);
-
+	page = new_page(size, typesize);
+	block = add_block(page, page + sizeof(page), size/*, type*/);
 	return (block);
 }
 
 void		*ft_malloc(size_t size)
 {
 	t_block		*block;
+	int			typesize;
 
-	if (!(block = space_available(size)))
+	typesize = get_typesize(size);
+	if (!(block = space_available(size, typesize)))
 	{
-		block = space_allocation(size);
+		block = space_allocation(size, typesize);
 	}
 	return ((void *)block);
 }

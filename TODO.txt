@@ -1,7 +1,15 @@
 
-- initialiser g_pagelist a 0
+// infos :
 
-- refactor large_check() : y'a des trucs useless dedans
+- aligner les header sur 16 octets
+- open marchera pas sans thread safe
+- y'a une histoire avec vim, demander aux potes de zak
+
+
+
+// to do :
+
+- initialiser g_pagelist a 0
 
 - checker les globales
 - Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free

@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: sgalasso <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2019/10/23 15:17:28 by sgalasso          #+#    #+#              #
+#    Updated: 2019/10/23 17:07:54 by sgalasso         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME 		= a.out
 CC 			= gcc
 CFLAGS 		= -Wall -Wextra -Werror -g -fsanitize=address
@@ -17,6 +29,7 @@ SRC_NAME 	= main.c \
 			ft_free.c \
 			show_alloc_mem.c \
 			show_pages_content.c \
+			utils_functions.c \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 

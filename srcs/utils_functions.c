@@ -1,45 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils_functions.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sgalasso <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/23 15:04:31 by sgalasso          #+#    #+#             */
-/*   Updated: 2019/10/23 15:13:53 by sgalasso         ###   ########.fr       */
+/*   Created: 2019/10/23 15:25:36 by sgalasso          #+#    #+#             */
+/*   Updated: 2019/10/23 15:32:21 by sgalasso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
-int		main(void)
+int		get_typesize(size_t size)
 {
-	char	*str;
-	char	*str1;
-
-	if (!(str = ft_malloc(sizeof(char) * 5)))
-	{
-		printf("Malloc returned null 0");
-		return (0);
-	}
-	str = strcpy(str, "12345");
-
-	if (!(str1 = ft_malloc(sizeof(char) * 5)))
-	{
-		printf("Malloc returned null 1");
-		return (0);
-	}
-	str1 = strcpy(str1, "abcde");
-
-	show_pages_content();
-
-	ft_free(str);
-
-	show_pages_content();
-
-	ft_free(str1);
-
-	show_pages_content();
-
-	return (0);
+	if (size <= TINY)
+		return (TINY);
+	else if (size > TINY && size <= SMALL)
+		return (SMALL);
+	return (LARGE);
 }
