@@ -32,6 +32,28 @@ t_block		*add_block(t_page *page, void *addr, size_t size)
 	return (new_block);
 }
 
+/*t_block		*small_check(t_page *page, size_t fsize, size_t size)
+{
+	t_block		*block = 0;
+
+	if (!page->blocklist && fsize <= page->size)
+	{
+		block = add_block(page, page + sizeof(t_page), size);
+		return (block);
+	}
+	while (block)
+	{
+		if ((!block->next && (size_t)(page + page->fsize) - (size_t)block >= fsize)
+		|| (block->next && (size_t)block->next - (size_t)(block + block->fsize) >= fsize))
+		{
+			block = add_block(page, block + block->fsize, size);
+			return (block);
+		}
+		block = block->next;
+	}
+	return (block);
+}*/
+
 t_block		*large_check(t_page *page, size_t fsize, size_t size)
 {
 	t_block		*block = 0;
@@ -64,11 +86,13 @@ t_block		*space_available(size_t size)
 	page = g_pagelist;
 	while (page)
 	{
-		if (0/*TINY*/)
-		{
+		if (size < TINYMAX)
+		{	
+			//block = tiny_check(page, fsize, size);
 		}
-		else if (0/*SMALL*/)
+		else if (size < SMALLMAX)
 		{
+			//block = small_check(page, fsize, size);
 		}
 		else
 		{

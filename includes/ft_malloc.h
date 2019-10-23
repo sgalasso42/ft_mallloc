@@ -1,6 +1,12 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
+# define TINY 100
+# define SMALL 1000
+
+# define TINYMAX 10
+# define SMALLMAX 100
+
 # include "libft.h"
 # include <sys/mman.h>
 # include <unistd.h>
