@@ -56,6 +56,9 @@ void					*ft_realloc(void *ptr, size_t size);
 void					ft_free(void *ptr);
 
 // BONUS
+// calloc
+// reallocf
+// valloc
 void					show_pages_content(void);
 
 #endif
