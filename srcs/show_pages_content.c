@@ -22,7 +22,7 @@ void		show_pages_content(void)
 	{
 		while (page)
 		{
-			printf("------------------\npage %p\n", page);
+			printf("------------------\npage %p | size = %zu\n", page, page->fsize);
 			if ((block = page->blocklist))
 			{
 				while (block)

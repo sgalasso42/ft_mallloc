@@ -6,7 +6,7 @@
 /*   By: sgalasso <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/23 15:04:26 by sgalasso          #+#    #+#             */
-/*   Updated: 2019/10/23 17:44:38 by sgalasso         ###   ########.fr       */
+/*   Updated: 2019/10/23 18:30:05 by sgalasso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,21 +47,23 @@ t_block		*add_block(t_page *page, void *addr, size_t size/*, int typesize*/)
 t_block		*size_check(t_page *page, size_t fsize, size_t size)
 {
 	t_block		*block = 0;
+	t_block		*curr_block = 0;
 
-	if (!page->blocklist)
+	curr_block = page->blocklist;
+	if (!curr_block)
 	{
 		block = add_block(page, page + sizeof(t_page), size);
 		return (block);
 	}
-	while (block)
+	while (curr_block)
 	{
-		if ((!block->next && (size_t)(page + page->fsize) - (size_t)block >= fsize)
-		|| (block->next && (size_t)block->next - (size_t)(block + block->fsize) >= fsize))
+		if ((!curr_block->next && (size_t)(page + page->fsize) - (size_t)curr_block >= fsize)
+		|| (curr_block->next && (size_t)curr_block->next - (size_t)(curr_block + curr_block->fsize) >= fsize))
 		{
-			block = add_block(page, block + block->fsize, size);
+			block = add_block(page, curr_block + curr_block->fsize, size);
 			return (block);
 		}
-		block = block->next;
+		curr_block = curr_block->next;
 	}
 	return (block);
 }
@@ -76,9 +78,11 @@ t_block		*space_available(size_t size, int typesize)
 	page = g_pagelist;
 	while (page)
 	{
-		if ((typesize == TINY && page->fsize == TINY) || (typesize == SMALL && page->fsize == SMALL))
-		{	
-			block = size_check(page, fsize, size);
+		if ((typesize == TINY && page->fsize == TINY)
+			|| (typesize == SMALL && page->fsize == SMALL))
+		{
+			if ((block = size_check(page, fsize, size)))
+				return (block);
 		}
 		page = page->next;
 	}
@@ -97,7 +101,7 @@ t_page		*new_page(size_t size, int typesize)
 		length = typesize;
 
 	if ((new_page = mmap(0, typesize, PROT_READ | PROT_WRITE,
-					MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
+		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
 	{
 		printf("mmap error\n");
 		exit(EXIT_FAILURE); // temporaire, trouver autre solution

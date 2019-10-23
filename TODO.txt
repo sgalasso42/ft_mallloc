@@ -1,7 +1,7 @@
 
 // infos :
 
-- aligner les header sur 16 octets
+- aligner les allocations sur 16 Bytes
 - open marchera pas sans thread safe
 - y'a une histoire avec vim, demander aux potes de zak
 

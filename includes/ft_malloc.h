@@ -13,23 +13,23 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
-# define TINY 1000	// N : should be TINYMAX * 100
+# define TINY 1000		// N : should be TINYMAX * 100
 # define SMALL 10000	// M : should be SMALLMAX * 100
 # define LARGE 0
 
-# define TINYMAX 10	// n
+# define TINYMAX 10		// n
 # define SMALLMAX 100	// m
 
 # include "libft.h"
 # include <sys/mman.h>
 # include <unistd.h>
 
-# include <stdio.h>	// to remove
+# include <stdio.h>		// to remove
 
 typedef struct	s_block			t_block;
 typedef struct	s_page			t_page;
 
-struct					s_block	// should be aligned to 16 Bytes
+struct					s_block
 {
 	size_t		fsize;	// full size
 	size_t		size;	// content size
@@ -37,7 +37,7 @@ struct					s_block	// should be aligned to 16 Bytes
 	t_page		*page;	// page linked
 };
 
-struct					s_page // should be aligned to 16 Bytes
+struct					s_page
 {
 	size_t		fsize;	// full size // also correspond to type
 	size_t		size;	// content size
