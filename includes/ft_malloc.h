@@ -15,7 +15,6 @@
 
 # define TINY 1000		// N : should be TINYMAX * 100
 # define SMALL 10000	// M : should be SMALLMAX * 100
-# define LARGE 0
 
 # define TINYMAX 10		// n
 # define SMALLMAX 100	// m

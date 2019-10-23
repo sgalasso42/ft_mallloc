@@ -95,20 +95,25 @@ t_page		*new_page(size_t size, int typesize)
 	t_page	*new_page;
 	int		length;
 
-	if (typesize == LARGE)
+	if (typesize != SMALL && typesize != TINY)
 		length = size + sizeof(t_page);
 	else
 		length = typesize;
 
-	if ((new_page = mmap(0, typesize, PROT_READ | PROT_WRITE,
+	printf("mmap length : %d\n", length);
+
+	if ((new_page = mmap(0, length, PROT_READ | PROT_WRITE,
 		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
 	{
-		printf("mmap error\n");
+		perror("mmap error "); // to remove or check if ok to use
 		exit(EXIT_FAILURE); // temporaire, trouver autre solution
 	}
 
 	new_page->size = size;
-	new_page->fsize = typesize;
+	if (typesize == SMALL || typesize == TINY)
+		new_page->fsize = typesize;
+	else
+		new_page->fsize = size + sizeof(t_page);
 	new_page->blocklist = 0;
 	new_page->next = 0;
 

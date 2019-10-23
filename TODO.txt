@@ -9,8 +9,11 @@
 
 // to do :
 
+- linker les pages aux blocs (t_block->page) et utiliser cette feature dans le code
+
 - initialiser g_pagelist a 0
 
+- size block -> multiple getpagesize()
 - checker les globales
 - Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free
 - check fonctions interdites

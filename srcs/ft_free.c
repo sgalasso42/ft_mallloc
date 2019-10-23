@@ -38,7 +38,7 @@ void		delete_page(t_page *page)
 			relink_pagelist(page, last_page);
 			if ((munmap((void *)page, page->fsize)) == -1)
 			{
-				printf("munmap error\n");
+				perror("munmap error "); // check if I can use perror, else to remove
 				exit(EXIT_FAILURE); // quitter proprement
 			}
 			return ;
@@ -65,7 +65,7 @@ void		relink_blocklist(t_page *page, t_block *block, t_block *last_block)
 	}
 }
 
-void		release_block(void *ptr)
+void		ft_free(void *ptr)
 {
 	t_page		*page;
 	t_block		*block;
@@ -93,18 +93,4 @@ void		release_block(void *ptr)
 		page = page->next;
 	}
 	printf("release block error : block not found");
-}
-
-void		ft_free(void *ptr)
-{
-	if (0/*TINY*/)
-	{
-	}
-	else if (0/*SMALL*/)
-	{
-	}
-	else
-	{
-		release_block(ptr);
-	}
 }
