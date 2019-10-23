@@ -119,7 +119,7 @@ t_page		*new_page(size_t size, int typesize)
 
 	if (!g_pagelist)
 	{
-		g_pagelist = new_page;;
+		g_pagelist = new_page;
 	}
 	else
 	{
@@ -148,6 +148,21 @@ void		*ft_malloc(size_t size)
 
 	typesize = get_typesize(size);
 	if (!(block = space_available(size, typesize)))
+	{
+		block = space_allocation(size, typesize);
+	}
+	return ((void *)block);
+}
+
+void		*ft_realloc(void *ptr, size_t size)
+{
+	t_block		*block;
+	int			typesize;
+
+	(void)ptr;
+
+	typesize = get_typesize(size);
+	if (!(0/* adding_possible(ptr, size) */))
 	{
 		block = space_allocation(size, typesize);
 	}
