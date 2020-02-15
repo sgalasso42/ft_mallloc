@@ -10,68 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <time.h>
 #include "ft_malloc.h"
 
-int		main(void)
+int	main(void)
 {
-	char	*str;
-	char	*str0;
-	char	*str1;
-	char	*str2;
-	(void)str;
-	(void)str0;
-	(void)str1;
-	(void)str2;
+	void	*test[1000];
+	ft_bzero(test, 1000 * sizeof(void*));
+	srand(time(NULL));
+	int i;
 
-	if (!(str = ft_malloc(sizeof(char) * 3)))
+	// MY MALLOC
+	clock_t lastTime0 = clock();
+	for (i = 0; i < 10; i++)
 	{
-		printf("Malloc returned null 0");
-		return (0);
+		void *ptr = ft_malloc((rand() % 15000));
+		test[i] = ptr;
 	}
-	printf("malloc %p\n", str);
+	clock_t diff0 = clock() - lastTime0;
 
-	if (!(str0 = ft_malloc(sizeof(char) * 5)))
+	// SYSTEM MALLOC
+	clock_t lastTime2 = clock();
+	for (i = 0; i < 10; i++)
 	{
-		printf("Malloc returned null 0");
-		return (0);
+		void *ptr = malloc((rand() % 15000));
+		test[i] = ptr;
 	}
-	printf("malloc %p\n", str0);
+	clock_t diff2 = clock() - lastTime2;
 
-	if (!(str1 = ft_malloc(sizeof(char) * 25)))
-	{
-		printf("Malloc returned null 1");
-		return (0);
-	}
-	printf("malloc %p\n", str1);
+	// MY FREE
+	clock_t lastTime1 = clock();
+	for (i = 0; i < 10; i++)
+		ft_free(test[i]);
+	clock_t diff1 = clock() - lastTime1;
 
-	if (!(str2 = ft_malloc(sizeof(char) * 160)))
-	{
-		printf("Malloc returned null 2");
-		return (0);
-	}
-	printf("malloc %p\n", str2);
+	// SYSTEM FREE
+	clock_t lastTime3 = clock();
+	for (i = 0; i < 10; i++)
+		free(test[i]);
+	clock_t diff3 = clock() - lastTime3;
 
+	// LOGS
 	show_pages_content();
-
-	printf("free %p\n", str);
-	ft_free(str);
-
-	show_pages_content();
-
-	printf("free %p\n", str0);
-	ft_free(str0);
-
-	show_pages_content();
-
-	printf("free %p\n", str1);
-	ft_free(str1);
-
-	show_pages_content();
-
-	printf("free %p\n", str2);
-	ft_free(str2);
-
-	show_pages_content();
-
+	printf("\nmalloc perso: %lu ticks\n", diff0);
+	printf("malloc system: %lu ticks\n", diff2);
+	printf("free perso: %lu ticks\n", diff1);
+	printf("free system: %lu ticks\n", diff3);
+	printf("\nratio malloc: %lu\n", diff0 / diff2);
+	printf("ratio free:   %lu\n", diff1 / diff3);
 	return (0);
 }

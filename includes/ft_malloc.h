@@ -13,11 +13,11 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
-# define TINY 1000		// N : should be TINYMAX * 100
-# define SMALL 10000	// M : should be SMALLMAX * 100
+# define TINY 90000		// N : should be TINYMAX * 100
+# define SMALL 900000	// M : should be SMALLMAX * 100
 
-# define TINYMAX 10		// n
-# define SMALLMAX 100	// m
+# define TINYMAX 900		// n
+# define SMALLMAX 9000		// m
 
 # include "libft.h"
 # include <sys/mman.h>

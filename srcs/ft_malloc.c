@@ -58,7 +58,7 @@ t_block		*size_check(t_page *page, size_t fsize, size_t size)
 	while (curr_block)
 	{
 		if ((!curr_block->next && (size_t)(page + page->fsize) - (size_t)curr_block >= fsize)
-		|| (curr_block->next && (size_t)curr_block->next - (size_t)(curr_block + curr_block->fsize) >= fsize))
+			|| (curr_block->next && (size_t)curr_block->next - (size_t)(curr_block + curr_block->fsize) >= fsize))
 		{
 			block = add_block(page, curr_block + curr_block->fsize, size);
 			return (block);
@@ -82,7 +82,9 @@ t_block		*space_available(size_t size, int typesize)
 			|| (typesize == SMALL && page->fsize == SMALL))
 		{
 			if ((block = size_check(page, fsize, size)))
+			{
 				return (block);
+			}
 		}
 		page = page->next;
 	}
@@ -100,7 +102,7 @@ t_page		*new_page(size_t size, int typesize)
 	else
 		length = typesize;
 
-	printf("mmap length : %d\n", length);
+	//printf("mmap length : %d\n", length);
 
 	if ((new_page = mmap(0, length, PROT_READ | PROT_WRITE,
 		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
@@ -148,21 +150,6 @@ void		*ft_malloc(size_t size)
 
 	typesize = get_typesize(size);
 	if (!(block = space_available(size, typesize)))
-	{
-		block = space_allocation(size, typesize);
-	}
-	return ((void *)block);
-}
-
-void		*ft_realloc(void *ptr, size_t size)
-{
-	t_block		*block;
-	int			typesize;
-
-	(void)ptr;
-
-	typesize = get_typesize(size);
-	if (!(0/* adding_possible(ptr, size) */))
 	{
 		block = space_allocation(size, typesize);
 	}

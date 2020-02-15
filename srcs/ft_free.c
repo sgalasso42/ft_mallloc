@@ -92,5 +92,5 @@ void		ft_free(void *ptr)
 		}
 		page = page->next;
 	}
-	printf("release block error : block not found");
+	//printf("release block error : block not found");
 }
