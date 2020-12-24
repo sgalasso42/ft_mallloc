@@ -12,7 +12,7 @@
 
 #include "ft_malloc.h"
 
-void		show_pages_content(void)
+void	show_pages_content(void)
 {
 	t_page		*page;
 	t_block		*block;
@@ -24,12 +24,14 @@ void		show_pages_content(void)
 	nb_small = 0;
 	nb_large = 0;
 	printf("\n#####################################\n\n");
-	if ((page = g_pagelist))
+	page = g_pagelist;
+	if (page)
 	{
 		while (page)
 		{
-			printf("------------------\npage %p | fsize = %zu\n", page, page->fsize);
-			if ((block = page->blocklist))
+			printf("----------------\npage %p | fsize = %zu\n", page, page->fsize);
+			block = page->blocklist;
+			if (block)
 			{
 				while (block)
 				{

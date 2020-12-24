@@ -1,14 +1,4 @@
 
-// infos :
-- void *  = 8 Bytes
-- size_t  = 8 Bytes
-
-// to know :
-- open marchera pas sans thread safe
-- y'a une histoire avec vim, demander aux potes de zak
-
-// to do :
-- aligner les allocations sur 16 Bytes (structures et mmap) (pour test : lancer ls -R)
 - linker les pages aux blocs (t_block->page) et utiliser cette feature dans le code
 - initialiser g_pagelist a 0
 - size block -> multiple getpagesize()
@@ -17,8 +7,14 @@
 - Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free
 
 // lasts checks :
-- auteur
-- norme
+- norme / norminette
 - checker les globales
 - check fonctions interdites
 - check libft (qui est toujours un peu crade)
+
+// Prototypes :
+#include <stdlib.h>
+
+void free(void *ptr);
+void* malloc(size_t size);
+void* realloc(void *ptr, size_t size);

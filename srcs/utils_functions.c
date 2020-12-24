@@ -12,7 +12,7 @@
 
 #include "ft_malloc.h"
 
-int		get_typesize(size_t size)
+int	get_typesize(size_t size)
 {
 	if (size <= TINYMAX)
 	{
