@@ -31,7 +31,7 @@ $(NAME): $(BIN_DIR) $(BINS)
 
 NB = $(words $(SRC_FILES))
 $(eval MAX=$(shell echo $$(($(NB) - 1))))
-$(BIN_DIR)%.o: $(SRC_DIR)%.c Makefile
+$(BIN_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)/ft_malloc.h Makefile
 	@$(eval INDEX=$(shell echo $$(($(INDEX) + 1))))
 	@$(eval PERCENT=$(shell echo $$(($(INDEX)*100/$(NB)))))
 	@$(CC) $(CFLAGS) -I $(INC_DIR) -o $@ -c $<
