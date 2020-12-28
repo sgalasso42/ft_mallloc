@@ -5,14 +5,15 @@ GREEN		= "\\033[32m"
 NAME =		libft_malloc_$(HOSTTYPE).so
 SL_NAME =	libft_malloc.so
 CC =		gcc
-CFLAGS = 	-Wall -Wextra -Werror#-g -fsanitize=address
+CFLAGS = 	-Wall -Wextra -Werror -g -fsanitize=address
 
 INC_DIR =	includes/
 SRC_DIR =	src/
 BIN_DIR =	bin/
 
-SRC_FILES =	ft_malloc.c \
-			ft_free.c \
+SRC_FILES =	malloc.c \
+			realloc.c \
+			free.c \
 			show_alloc_mem.c \
 			show_pages_content.c \
 			utils.c \

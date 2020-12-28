@@ -48,6 +48,7 @@ t_block	*add_block(t_block *prev, t_page *page, void *addr, size_t size)
 		page->blocklist = new_block;
 		new_block->next = 0;
 	}
+	new_block->page = page;
 	return (new_block);
 }
 

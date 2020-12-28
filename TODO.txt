@@ -1,5 +1,4 @@
 
-- linker les pages aux blocs (t_block->page) et utiliser cette feature dans le code
 - initialiser g_pagelist a 0
 - size block -> multiple getpagesize()
 
@@ -17,3 +16,6 @@ verfier que si get_typesize retourne return (size + sizeof(t_page));, il ne corr
 void free(void *ptr);
 void* malloc(size_t size);
 void* realloc(void *ptr, size_t size);
+
+// To test
+ft_malloc % make && gcc src/main.c libft_malloc.so && ./a.out

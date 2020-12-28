@@ -50,7 +50,7 @@ t_page					*add_page(size_t size);
 void					show_alloc_mem(void);
 void					show_pages_content(void);
 void					*malloc(size_t size);
-void					*ft_realloc(void *ptr, size_t size);
+void					*realloc(void *ptr, size_t size);
 // calloc
 // reallocf
 // valloc
