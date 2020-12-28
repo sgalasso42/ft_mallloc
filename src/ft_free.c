@@ -53,7 +53,7 @@ void		relink_blocklist(t_page *page, t_block *block, t_block *last_block)
 	}
 }
 
-void		ft_free(void *ptr)
+void		free(void *ptr)
 {
 	t_page		*page;
 	t_block		*block;

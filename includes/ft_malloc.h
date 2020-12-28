@@ -16,23 +16,22 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-
-# include <stdio.h>	// to remove
+# include <stdio.h>
 
 typedef struct s_block	t_block;
 typedef struct s_page	t_page;
 
 struct					s_block
 {
-	size_t		fsize; // full size
+	size_t		fsize; // (header + content) size
 	size_t		size; // content size
 	t_block		*next;
-	t_page		*page; // page linked
+	t_page		*page;
 };
 
 struct					s_page
 {
-	size_t		fsize; // full size // also correspond to type
+	size_t		fsize; // (header + content) size // also correspond to type
 	size_t		size; // content size
 	t_block		*blocklist;
 	t_page		*next;
@@ -40,21 +39,21 @@ struct					s_page
 
 t_page					*g_pagelist;
 
-// UTILS FUNCTIONS
+// utils functions
 int						get_typesize(size_t size);
 void					ft_bzero(void *s, size_t n);
 void					*ft_memset(void *s, int c, size_t n);
+t_block					*add_block(t_block *prev, t_page *page, void *addr, size_t size);
+t_page					*add_page(size_t size);
 
-// LIB FUNCTIONS
+// library functions
 void					show_alloc_mem(void);
-void					*ft_malloc(size_t size);
+void					show_pages_content(void);
+void					*malloc(size_t size);
 void					*ft_realloc(void *ptr, size_t size);
-void					ft_free(void *ptr);
-
-// BONUS
 // calloc
 // reallocf
 // valloc
-void					show_pages_content(void);
+void					free(void *ptr);
 
 #endif

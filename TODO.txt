@@ -3,8 +3,7 @@
 - initialiser g_pagelist a 0
 - size block -> multiple getpagesize()
 
-// testing :
-- Dans les protos : remplacer ft_malloc/ft_realloc/ft_free par malloc/realloc/free
+verfier que si get_typesize retourne return (size + sizeof(t_page));, il ne corresponde jamais à SMALL ou TINY
 
 // lasts checks :
 - norme / norminette
@@ -18,5 +17,3 @@
 void free(void *ptr);
 void* malloc(size_t size);
 void* realloc(void *ptr, size_t size);
-
-Fix gitignore

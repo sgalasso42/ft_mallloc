@@ -1,75 +1,39 @@
 #include "ft_malloc.h"
 
-t_block		*add_block(t_page *page, void *addr, size_t size/*, int typesize*/)
+t_block		*find_block_space(t_page *page, size_t fsize, size_t size)
 {
-	t_block		*curr_block; // current block
-	t_block		*new_block;
+	t_block	*current = 0;
 
-	new_block = addr;
-	new_block->size = size;
-	new_block->fsize = size + sizeof(t_block);
-
-	if ((curr_block = page->blocklist))
+	if (!(current = page->blocklist))
 	{
-		while (curr_block->next)
+		return (add_block(current, page, page + sizeof(t_page), size));
+	}
+	while (current->next)
+	{
+		if (((size_t)current->next - (size_t)(current + current->fsize) >= fsize))
 		{
-			if (curr_block < new_block)
-			{
-				if ((curr_block->next && (void *)new_block < (void *)curr_block->next)
-				|| (!curr_block->next && (void *)new_block < (void *)page->next))
-					break ;
-			}
-			curr_block = curr_block->next;
+			return (add_block(current, page, current + current->fsize, size));
 		}
-		new_block->next = curr_block->next;
-		curr_block->next = new_block;
+		current = current->next;
 	}
-	else
+	if ((size_t)(page + page->fsize) - (size_t)current >= fsize)
 	{
-		page->blocklist = new_block;
-		new_block->next = 0;
+		return (add_block(current, page, current + current->fsize, size));
 	}
-	return (new_block);
+	return (0);
 }
 
-t_block		*size_check(t_page *page, size_t fsize, size_t size)
-{
-	t_block		*block = 0;
-	t_block		*curr_block = 0;
-
-	curr_block = page->blocklist;
-	if (!curr_block)
-	{
-		block = add_block(page, page + sizeof(t_page), size);
-		return (block);
-	}
-	while (curr_block)
-	{
-		if ((!curr_block->next && (size_t)(page + page->fsize) - (size_t)curr_block >= fsize)
-			|| (curr_block->next && (size_t)curr_block->next - (size_t)(curr_block + curr_block->fsize) >= fsize))
-		{
-			block = add_block(page, curr_block + curr_block->fsize, size);
-			return (block);
-		}
-		curr_block = curr_block->next;
-	}
-	return (block);
-}
-
-t_block		*space_available(size_t size, int typesize)
+t_block		*find_available_space(size_t size)
 {
 	t_page		*page;
 	t_block		*block;
-	size_t		fsize;
 
-	fsize = size + sizeof(t_block);
 	page = g_pagelist;
 	while (page)
 	{
-		if ((typesize == TINY && page->fsize == TINY)
-			|| (typesize == SMALL && page->fsize == SMALL))
+		if ((size_t)get_typesize(size) == page->fsize)
 		{
-			if ((block = size_check(page, fsize, size)))
+			if ((block = find_block_space(page, size + sizeof(t_block), size)))
 			{
 				return (block);
 			}
@@ -79,67 +43,15 @@ t_block		*space_available(size_t size, int typesize)
 	return (0);
 }
 
-t_page		*new_page(size_t size, int typesize)
+void		*malloc(size_t size)
 {
-	t_page	*last_page;
-	t_page	*new_page;
-	int		length;
-
-	if (typesize != SMALL && typesize != TINY)
-		length = size + sizeof(t_page);
-	else
-		length = typesize;
-
-	//printf("mmap length : %d\n", length);
-
-	if ((new_page = mmap(0, length, PROT_READ | PROT_WRITE,
-		MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
-	{
-		perror("mmap error "); // to remove or check if ok to use
-		exit(EXIT_FAILURE); // temporaire, trouver autre solution
-	}
-
-	new_page->size = size;
-	if (typesize == SMALL || typesize == TINY)
-		new_page->fsize = typesize;
-	else
-		new_page->fsize = size + sizeof(t_page);
-	new_page->blocklist = 0;
-	new_page->next = 0;
-
-	if (!g_pagelist)
-	{
-		g_pagelist = new_page;
-	}
-	else
-	{
-		last_page = g_pagelist;
-		while (last_page->next)
-			last_page = last_page->next;
-		last_page->next = new_page;
-	}
-	return (new_page);
-}
-
-t_block		*space_allocation(size_t size, int typesize)
-{
+	t_block		*block;
 	t_page		*page;
-	t_block		*block;
 
-	page = new_page(size, typesize);
-	block = add_block(page, page + sizeof(page), size/*, type*/);
-	return (block);
-}
-
-void		*ft_malloc(size_t size)
-{
-	t_block		*block;
-	int			typesize;
-
-	typesize = get_typesize(size);
-	if (!(block = space_available(size, typesize)))
+	if (!(block = find_available_space(size)))
 	{
-		block = space_allocation(size, typesize);
+		page = add_page(size);
+		block = add_block(page->blocklist, page, page + sizeof(page), size);
 	}
 	return ((void *)block);
 }
