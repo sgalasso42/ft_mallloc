@@ -1,21 +1,33 @@
 
-- initialiser g_pagelist a 0
-- size block -> multiple getpagesize()
+// Correction:
 
-verfier que si get_typesize retourne return (size + sizeof(t_page));, il ne corresponde jamais à SMALL ou TINY
+infos: getpagesize(): 4096
+[!] qualité du free: optimiser pour avoir 3 pages reclaims de plus max sur test2 que sur test0
+[!] Test de show_alloc_mem: (test5) correspond to subject + making it compilable
 
-// lasts checks :
-- norme / norminette
+----------------
+
+// Bonus
+
+defragmentation ?
+calloc ?
+reallocf ?
+valloc ?
+
+----------------
+
+// To check
+
+gestion de toutes les erreurs
+verfier que si get_typesize retourne return (size + sizeof(t_page)); il ne corresponde jamais à SMALL ou TINY
+
+----------------
+
+// Last check :
+
+- norminette
 - checker les globales
 - check fonctions interdites
 - check libft (qui est toujours un peu crade)
-
-// Prototypes :
-#include <stdlib.h>
-
-void free(void *ptr);
-void* malloc(size_t size);
-void* realloc(void *ptr, size_t size);
-
-// To test
-ft_malloc % make && gcc src/main.c libft_malloc.so && ./a.out
+- virer printf
+- virer fsanitize dans la compil

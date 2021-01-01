@@ -1,10 +1,10 @@
 #include "ft_malloc.h"
 
-void		relink_pagelist(t_page *page, t_page *last_page)
+void		relink_pagelist(t_page *page, t_page *previous)
 {
-	if (last_page)
+	if (previous)
 	{
-		last_page->next = page->next;
+		previous->next = page->next;
 	}
 	else
 	{
@@ -14,16 +14,16 @@ void		relink_pagelist(t_page *page, t_page *last_page)
 
 void		delete_page(t_page *page)
 {
-	t_page	*curr_page;
-	t_page	*last_page;
+	t_page	*current;
+	t_page	*previous;
 
-	last_page = 0;
-	curr_page = g_pagelist;
-	while (curr_page)
+	previous = 0;
+	current = g_pagelist;
+	while (current)
 	{
-		if (curr_page == page)
+		if (current == page)
 		{
-			relink_pagelist(page, last_page);
+			relink_pagelist(page, previous);
 			if ((munmap((void *)page, page->fsize)) == -1)
 			{
 				perror("munmap error "); // check if I can use perror, else to remove
@@ -31,17 +31,16 @@ void		delete_page(t_page *page)
 			}
 			return ;
 		}
-		last_page = curr_page;
-		curr_page = curr_page->next;
+		previous = current;
+		current = current->next;
 	}
-	printf("delete_page error : page not found");
 }
 
-void		relink_blocklist(t_page *page, t_block *block, t_block *last_block)
+void		relink_blocklist(t_page *page, t_block *block, t_block *previous)
 {
-	if (last_block)
+	if (previous)
 	{
-		last_block->next = block->next;
+		previous->next = block->next;
 	}
 	else
 	{
@@ -57,14 +56,10 @@ void		free(void *ptr)
 {
 	t_page		*page;
 	t_block		*block;
-	t_block		*last_block;
+	t_block		*previous;
 
-	last_block = 0;
-	if (!(page = g_pagelist))
-	{
-		printf("release block error : no pages found");
-		return ;
-	}
+	previous = 0;
+	page = g_pagelist;
 	while (page)
 	{
 		block = page->blocklist;
@@ -72,13 +67,12 @@ void		free(void *ptr)
 		{
 			if ((void *)block == ptr)
 			{
-				relink_blocklist(page, block, last_block);
+				relink_blocklist(page, block, previous);
 				return ;
 			}
-			last_block = block;
+			previous = block;
 			block = block->next;
 		}
 		page = page->next;
 	}
-	//printf("release block error : block not found");
 }

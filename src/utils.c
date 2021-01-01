@@ -1,13 +1,13 @@
 #include "ft_malloc.h"
 
-void	ft_bzero(void *s, size_t n)
+void ft_bzero(void *s, size_t n)
 {
 	ft_memset(s, '\0', n);
 }
 
-void	*ft_memset(void *s, int c, size_t n)
+void *ft_memset(void *s, int c, size_t n)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
 	while (i < n)
@@ -18,50 +18,50 @@ void	*ft_memset(void *s, int c, size_t n)
 	return (s);
 }
 
-int		get_typesize(size_t size)
+int get_typesize(size_t size)
 {
-	if (size <= TINYMAX)
+	if (size + sizeof(t_block) <= TINYMAX)
 	{
 		return (TINY);
 	}
-	else if (size > TINYMAX && size <= SMALLMAX)
+	else if (size + sizeof(t_block) > TINYMAX && size + sizeof(t_block) <= SMALLMAX)
 	{
 		return (SMALL);
 	}
-	return (size + sizeof(t_page));
+	return (sizeof(t_page) + sizeof(t_block) + size);
 }
 
-t_block	*add_block(t_block *prev, t_page *page, void *addr, size_t size)
+t_block *add_block(t_block *prev, t_page *page, void *addr, size_t size)
 {
-	t_block		*new_block;
+	t_block *new_block;
 
+	// printf("> creating block: [%p] of size: %zu\n", addr, size);
 	new_block = addr;
 	new_block->size = size;
-	new_block->fsize = size + sizeof(t_block);
-	if (prev)
-	{
-		new_block->next = prev->next;
-		prev->next = new_block;
-	}
-	else
+	if (!prev)
 	{
 		page->blocklist = new_block;
 		new_block->next = 0;
+	}
+	else
+	{
+		new_block->next = prev->next;
+		prev->next = new_block;
 	}
 	new_block->page = page;
 	return (new_block);
 }
 
-t_page	*add_page(size_t size)
+t_page *add_page(size_t size)
 {
-	t_page	*new_page;
+	t_page *new_page;
 
 	if ((new_page = mmap(0, get_typesize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
 	{
 		perror("mmap error "); // to remove or check if ok to use
-		exit(EXIT_FAILURE); // temporaire, trouver autre solution
+		exit(EXIT_FAILURE);	   // temporaire, trouver autre solution
 	}
-	new_page->size = size;
+	// printf("> creating page: [%p] of fsize: %d\n", new_page, get_typesize(size));
 	new_page->fsize = get_typesize(size);
 	new_page->blocklist = 0;
 	new_page->next = g_pagelist;

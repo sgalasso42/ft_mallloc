@@ -5,11 +5,12 @@ GREEN		= "\\033[32m"
 NAME =		libft_malloc_$(HOSTTYPE).so
 SL_NAME =	libft_malloc.so
 CC =		gcc
-CFLAGS = 	-Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = 	-Wall -Wextra -Werror #-g -fsanitize=address
 
 INC_DIR =	includes/
 SRC_DIR =	src/
 BIN_DIR =	bin/
+TEST_DIR =	tests/
 
 SRC_FILES =	malloc.c \
 			realloc.c \
@@ -46,15 +47,20 @@ $(BIN_DIR)%.o: $(SRC_DIR)%.c $(INC_DIR)/ft_malloc.h Makefile
 $(BIN_DIR):
 	@mkdir -p bin
 
+test:
+	make && cp $(NAME) $(TEST_DIR) && cp $(SL_NAME) $(TEST_DIR) && $(CC) $(TEST_DIR)$(TEST) $(SL_NAME) && ./a.out
+
 clean:
 	@rm -rf $(BIN_DIR)
 	@printf "$(GREEN)[OK]$(WHITE) clean done\n"
 
 fclean: clean
+	@rm -f $(TEST_DIR)$(NAME)
+	@rm -f $(TEST_DIR)$(SL_NAME)
 	@rm -f $(NAME)
 	@rm -f $(SL_NAME)
 	@printf "$(GREEN)[OK]$(WHITE) fclean done\n"
 
 re: fclean all
 
-.PHONY: all re run clean fclean
+.PHONY: all re run clean fclean test

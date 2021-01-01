@@ -2,17 +2,33 @@
 // #include "ft_malloc.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <unistd.h>
 
 int	main(void)
 {
-	char *str, *ptr;
+	char	*str;
+	char	*ptr;
+
 	if (!(str = malloc(10)))
+	{
+		printf("error: malloc\n");
 		return 0;
-	printf("Malloc OK\n");
+	}
+	for (int i = 0; i < 10; i++) {
+		str[i] = 'c';
+	}
+	printf("str: %s\n", str);
+
 	if (!(ptr = realloc(str, 30)))
+	{
+		printf("error: realloc\n");
 		return 0;
-	printf("Realloc OK\n");
+	}
+	for (int i = 0; i < 30; i++) {
+		str[i] = 'a';
+	}
+	
+	printf("str: %s\n", str);
 
 	// void	*test[1000];
 	// ft_bzero(test, 1000 * sizeof(void*));

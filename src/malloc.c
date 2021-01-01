@@ -1,24 +1,31 @@
 #include "ft_malloc.h"
 
-t_block		*find_block_space(t_page *page, size_t fsize, size_t size)
+t_block		*find_block_space(t_page *page, size_t size)
 {
 	t_block	*current = 0;
 
+	// printf("size: %zu\n", size);
+	// printf("t_block: %zu\n", sizeof(t_block));
+	// printf("t_page: %zu\n", sizeof(t_page));
+	// printf("fsize: %zu\n", size + sizeof(t_block));
 	if (!(current = page->blocklist))
 	{
-		return (add_block(current, page, page + sizeof(t_page), size));
+		// printf("Space found (FIRST)\n");
+		return (add_block(current, page, (void *)page + sizeof(t_page), size));
 	}
 	while (current->next)
 	{
-		if (((size_t)current->next - (size_t)(current + current->fsize) >= fsize))
+		if ((size_t)((void *)(current->next) - ((void *)current + current->size + sizeof(t_block))) >= size + sizeof(t_block))
 		{
-			return (add_block(current, page, current + current->fsize, size));
+			// printf("Space found (BETWEEN) after block [%p] + fsize: %zu\n", current, current->size + sizeof(t_block));
+			return (add_block(current, page, (void *)current + current->size + sizeof(t_block), size));
 		}
 		current = current->next;
 	}
-	if ((size_t)(page + page->fsize) - (size_t)current >= fsize)
+	if ((size_t)(((void *)page + page->fsize) - ((void *)current + current->size + sizeof(t_block))) >= size + sizeof(t_block))
 	{
-		return (add_block(current, page, current + current->fsize, size));
+		// printf("Space found (LAST) after block [%p] + fsize: %zu\n", current, current->size + sizeof(t_block));
+		return (add_block(current, page, (void *)current + current->size + sizeof(t_block), size));
 	}
 	return (0);
 }
@@ -33,7 +40,7 @@ t_block		*find_available_space(size_t size)
 	{
 		if ((size_t)get_typesize(size) == page->fsize)
 		{
-			if ((block = find_block_space(page, size + sizeof(t_block), size)))
+			if ((block = find_block_space(page, size)))
 			{
 				return (block);
 			}
@@ -50,8 +57,9 @@ void		*malloc(size_t size)
 
 	if (!(block = find_available_space(size)))
 	{
+		// printf("Space not found\n");
 		page = add_page(size);
-		block = add_block(page->blocklist, page, page + sizeof(page), size);
+		block = add_block(page->blocklist, page, (void *)page + sizeof(t_page), size);
 	}
-	return ((void *)block);
+	return ((void *)block + sizeof(t_block));
 }

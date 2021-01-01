@@ -1,11 +1,11 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
-# define TINY 90000 // N : should be TINYMAX * 100
-# define SMALL 900000 // M : should be SMALLMAX * 100
+# define TINY 4096 // (TINYMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 4024
+# define SMALL 16384 // (SMALLMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 15224
 
-# define TINYMAX 900 // n
-# define SMALLMAX 9000  // m
+# define TINYMAX 16
+# define SMALLMAX 128
 
 // to remove useless includes
 # include <sys/mman.h>
@@ -23,7 +23,6 @@ typedef struct s_page	t_page;
 
 struct					s_block
 {
-	size_t		fsize; // (header + content) size
 	size_t		size; // content size
 	t_block		*next;
 	t_page		*page;
@@ -31,8 +30,7 @@ struct					s_block
 
 struct					s_page
 {
-	size_t		fsize; // (header + content) size // also correspond to type
-	size_t		size; // content size
+	size_t		fsize; // full size (also correspond to type)
 	t_block		*blocklist;
 	t_page		*next;
 };
