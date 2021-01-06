@@ -54,17 +54,22 @@ t_block *add_block(t_block *prev, t_page *page, void *addr, size_t size)
 
 t_page *add_page(size_t size)
 {
-	t_page *new_page;
+	t_page	*new_page;
+	t_page	*ptr;
 
 	if ((new_page = mmap(0, get_typesize(size), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0)) == MAP_FAILED)
-	{
-		perror("mmap error "); // to remove or check if ok to use
-		exit(EXIT_FAILURE);	   // temporaire, trouver autre solution
-	}
-	// printf("> creating page: [%p] of fsize: %d\n", new_page, get_typesize(size));
+		return (NULL);
 	new_page->fsize = get_typesize(size);
 	new_page->blocklist = 0;
-	new_page->next = g_pagelist;
-	g_pagelist = new_page;
+	new_page->next = 0;
+	ptr = g_pagelist;
+	if (!ptr)
+		g_pagelist = new_page;
+	else
+	{
+		while (ptr->next)
+			ptr = ptr->next;
+		ptr->next = new_page;
+	}
 	return (new_page);
 }

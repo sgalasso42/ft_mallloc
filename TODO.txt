@@ -4,6 +4,8 @@
 infos: getpagesize(): 4096
 [!] qualité du free: optimiser pour avoir 3 pages reclaims de plus max sur test2 que sur test0
 [!] Test de show_alloc_mem: (test5) correspond to subject + making it compilable
+Test5 du sujet ne compile pas (librairie prototype)
+recheck tous les tests
 
 ----------------
 

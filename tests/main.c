@@ -4,31 +4,31 @@
 #include <stdio.h>
 #include <unistd.h>
 
+void show_alloc_mem();
+
 int	main(void)
 {
-	char	*str;
-	char	*ptr;
+	int i;
+	char *addr[11];
 
-	if (!(str = malloc(10)))
+	i = 0;
+	while (i < 10)
 	{
-		printf("error: malloc\n");
-		return 0;
+		addr[i] = (char *)malloc(1024);
+		// printf("ptr: %p\n", addr[i]);
+		addr[i][0] = 42;
+		i++;
 	}
-	for (int i = 0; i < 10; i++) {
-		str[i] = 'c';
-	}
-	printf("str: %s\n", str);
-
-	if (!(ptr = realloc(str, 30)))
+	show_alloc_mem();
+	i = 0;
+	while (i < 10)
 	{
-		printf("error: realloc\n");
-		return 0;
+		// printf("ptr: %p\n", addr[i]);
+		free(addr[i]);
+		i++;
 	}
-	for (int i = 0; i < 30; i++) {
-		str[i] = 'a';
-	}
-	
-	printf("str: %s\n", str);
+	show_alloc_mem();
+	return (0);
 
 	// void	*test[1000];
 	// ft_bzero(test, 1000 * sizeof(void*));
@@ -73,5 +73,5 @@ int	main(void)
 	// printf("free system: %lu ticks\n", diff3);
 	// printf("\nratio malloc: %lu\n", diff0 / diff2);
 	// printf("ratio free:   %lu\n", diff1 / diff3);
-	return (0);
+	// return (0);
 }

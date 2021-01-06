@@ -1,11 +1,11 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
-# define TINY 4096 // (TINYMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 4024
-# define SMALL 16384 // (SMALLMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 15224
+# define TINY 16384 // 4096 * 4 > (TINYMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 15224
+# define SMALL 106496 // 4096 * 26 > (SMALLMAX + sizeof(t_block)) * 100 + sizeof(t_block) = 104824
 
-# define TINYMAX 16
-# define SMALLMAX 128
+# define TINYMAX 128
+# define SMALLMAX 1024
 
 // to remove useless includes
 # include <sys/mman.h>

@@ -58,7 +58,8 @@ void		*malloc(size_t size)
 	if (!(block = find_available_space(size)))
 	{
 		// printf("Space not found\n");
-		page = add_page(size);
+		if (!(page = add_page(size)))
+			return (NULL);
 		block = add_block(page->blocklist, page, (void *)page + sizeof(t_page), size);
 	}
 	return ((void *)block + sizeof(t_block));

@@ -24,6 +24,7 @@ void		delete_page(t_page *page)
 		if (current == page)
 		{
 			relink_pagelist(page, previous);
+			// printf("page: %p size: %zu\n", page, page->fsize);
 			if ((munmap((void *)page, page->fsize)) == -1)
 			{
 				perror("munmap error "); // check if I can use perror, else to remove
@@ -58,6 +59,7 @@ void		free(void *ptr)
 	t_block		*block;
 	t_block		*previous;
 
+	// printf("ptr: %p\n", ptr - sizeof(t_block));
 	previous = 0;
 	page = g_pagelist;
 	while (page)
@@ -65,7 +67,7 @@ void		free(void *ptr)
 		block = page->blocklist;
 		while (block)
 		{
-			if ((void *)block == ptr)
+			if ((void *)block == ptr - sizeof(t_block))
 			{
 				relink_blocklist(page, block, previous);
 				return ;
