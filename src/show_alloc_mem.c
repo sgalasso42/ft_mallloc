@@ -20,16 +20,22 @@ void		show_alloc_mem(void)
 	while (page)
 	{
 		if (page->fsize == TINY)
-			printf("TINY : ");
+			ft_putstr("TINY : ");
 		else if (page->fsize == SMALL)
-			printf("SMALL : ");
+			ft_putstr("SMALL : ");
 		else
-			printf("LARGE : ");
-		printf("%p\n", (void*)page + sizeof(t_page));
+			ft_putstr("LARGE : ");
+		ft_putstr((void*)page + sizeof(t_page));
+		ft_putstr("\n");
 		block = page->blocklist;
 		while (block)
 		{
-			printf("%p - %p : %zu octets\n", (void *)block + sizeof(t_block), (void *)block + sizeof(t_block) + block->size, block->size);
+			ft_putstr((void *)block + sizeof(t_block));
+			ft_putstr(" - ");
+			ft_putstr((void *)block + sizeof(t_block) + block->size);
+			ft_putstr(ft_itoa(block->size));
+			ft_putstr(" : ");
+			ft_putstr("octets\n");
 			block = block->next;
 		}
 		page = page->next;

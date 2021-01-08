@@ -41,6 +41,9 @@ t_page					*g_pagelist;
 int						get_typesize(size_t size);
 void					ft_bzero(void *s, size_t n);
 void					*ft_memset(void *s, int c, size_t n);
+size_t					ft_strlen(const char *s);
+void					ft_putstr(char const *s);
+char					*ft_itoa(int n);
 t_block					*add_block(t_block *prev, t_page *page, void *addr, size_t size);
 t_page					*add_page(size_t size);
 

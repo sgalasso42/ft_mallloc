@@ -55,6 +55,7 @@ void		*malloc(size_t size)
 	t_block		*block;
 	t_page		*page;
 
+	ft_putstr("malloc called\n");
 	if (!(block = find_available_space(size)))
 	{
 		// printf("Space not found\n");

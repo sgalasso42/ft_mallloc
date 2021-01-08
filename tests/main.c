@@ -9,25 +9,16 @@ void show_alloc_mem();
 int	main(void)
 {
 	int i;
-	char *addr[11];
+	char *addr;
 
 	i = 0;
-	while (i < 10)
+	while (i < 1000)
 	{
-		addr[i] = (char *)malloc(1024);
-		// printf("ptr: %p\n", addr[i]);
-		addr[i][0] = 42;
+		addr = (char *)malloc(1024);
+		addr[0] = 42;
 		i++;
 	}
-	show_alloc_mem();
-	i = 0;
-	while (i < 10)
-	{
-		// printf("ptr: %p\n", addr[i]);
-		free(addr[i]);
-		i++;
-	}
-	show_alloc_mem();
+	// show_alloc_mem();
 	return (0);
 
 	// void	*test[1000];
